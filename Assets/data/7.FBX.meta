@@ -1,0 +1,157 @@
+fileFormatVersion: 2
+guid: bd50799ecac9fb0429b7d3c35197d7f9
+timeCreated: 1450839352
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: green
+    100004: gynn1
+    100006: gynn1_MeshPart0
+    100008: gynn1_MeshPart1
+    100010: gynn1_MeshPart2
+    100012: gynn2
+    100014: gynn2_MeshPart0
+    100016: gynn2_MeshPart1
+    100018: gynn2_MeshPart2
+    100020: gynn2_MeshPart3
+    100022: gynn2_MeshPart4
+    100024: R4
+    100026: R6
+    100028: R8
+    100030: Rectangle01
+    100032: Rectangle02
+    100034: Rectangle05
+    100036: water
+    400000: //RootNode
+    400002: green
+    400004: gynn1
+    400006: gynn1_MeshPart0
+    400008: gynn1_MeshPart1
+    400010: gynn1_MeshPart2
+    400012: gynn2
+    400014: gynn2_MeshPart0
+    400016: gynn2_MeshPart1
+    400018: gynn2_MeshPart2
+    400020: gynn2_MeshPart3
+    400022: gynn2_MeshPart4
+    400024: R4
+    400026: R6
+    400028: R8
+    400030: Rectangle01
+    400032: Rectangle02
+    400034: Rectangle05
+    400036: water
+    2300000: green
+    2300002: gynn1_MeshPart0
+    2300004: gynn1_MeshPart1
+    2300006: gynn1_MeshPart2
+    2300008: gynn2_MeshPart0
+    2300010: gynn2_MeshPart1
+    2300012: gynn2_MeshPart2
+    2300014: gynn2_MeshPart3
+    2300016: gynn2_MeshPart4
+    2300018: R4
+    2300020: R6
+    2300022: R8
+    2300024: Rectangle01
+    2300026: Rectangle02
+    2300028: Rectangle05
+    2300030: water
+    3300000: green
+    3300002: gynn1_MeshPart0
+    3300004: gynn1_MeshPart1
+    3300006: gynn1_MeshPart2
+    3300008: gynn2_MeshPart0
+    3300010: gynn2_MeshPart1
+    3300012: gynn2_MeshPart2
+    3300014: gynn2_MeshPart3
+    3300016: gynn2_MeshPart4
+    3300018: R4
+    3300020: R6
+    3300022: R8
+    3300024: Rectangle01
+    3300026: Rectangle02
+    3300028: Rectangle05
+    3300030: water
+    4300000: water
+    4300002: green
+    4300004: R4
+    4300006: Rectangle01
+    4300008: R6
+    4300010: Rectangle02
+    4300012: R8
+    4300014: gynn2_MeshPart0
+    4300016: gynn2_MeshPart1
+    4300018: gynn2_MeshPart2
+    4300020: gynn2_MeshPart3
+    4300022: gynn2_MeshPart4
+    4300024: gynn1_MeshPart0
+    4300026: gynn1_MeshPart1
+    4300028: gynn1_MeshPart2
+    4300030: Rectangle05
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

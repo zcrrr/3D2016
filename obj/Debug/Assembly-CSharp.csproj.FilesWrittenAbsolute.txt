@@ -1,0 +1,17 @@
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/obj/Debug/Assembly-CSharp.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/UnityEngine.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/UnityEditor.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Mono.Cecil.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Unity.DataContract.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Mono.Cecil.Mdb.dll
