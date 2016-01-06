@@ -31,7 +31,7 @@ public class TextureUtil : MonoBehaviour {
 	float stepIntSmall = 0.1f;
 	// Use this for initialization
 	void Start () {
-		Main.initById (48);
+		Main.initById (119);
 		myCamera = GetComponent<Camera>();
 		string[] spots = Main.testdataPoi.Split (new char[] { ';' });
 		for (int i = 0; i < spots.Length; i++) {
@@ -144,7 +144,7 @@ public class TextureUtil : MonoBehaviour {
 			float x = Input.mousePosition.x;//get x of coordinate  
 			float y = Input.mousePosition.y;//get y of coordinate  
 			print("x:"+x+"  y:"+y); 
-			if(y < Screen.height - 180){
+			if(y < Screen.height - 240){
 				Vector3 locationWorld = myCamera.ScreenToWorldPoint(new Vector3(x,y,transform.position.y/Mathf.Sin(DegreetoRadians(transform.eulerAngles.x))));
 				//			print("locationWorld:"+locationWorld);
 				locationWorld.y = 0;

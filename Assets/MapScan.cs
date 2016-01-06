@@ -84,7 +84,7 @@ public class MapScan : MonoBehaviour {
 //		Main.initById (10);
 //		zywx_setPoiDateSource (Main.testdataAll);
 
-		LonLatPoint lonlatpoint = new LonLatPoint(110.246429f,19.770578f);
+		LonLatPoint lonlatpoint = new LonLatPoint(116.272430f,39.991851f);
 		LonLatPoint lonlatMercator = gp.lonlatToMercator (lonlatpoint, 17);
 		print("---------------------lonlatMercator is "+(long)lonlatMercator.lon+"  "+(long)lonlatMercator.lat);	
 		setPcToPhoneScaleByPhoneType ();
