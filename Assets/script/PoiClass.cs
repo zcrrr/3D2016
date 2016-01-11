@@ -30,7 +30,7 @@ public class PoiClass{
 		float minx1 = 0.0f, maxx1 = 0.0f, miny1 = 0.0f, maxy1 = 0.0f;
 		float minx = 0.0f, maxx = 0.0f, miny = 0.0f, maxy = 0.0f;
 		//接下来得到这几个值
-		if (poi1.type == selectedType || poi1.isSelected == 1) {//poi是需要大图标显示的poi
+		if (poi1.isSelected == 1) {//poi是需要大图标显示的poi
 			minx1 = poi1.screenPosition.x - poi1.labelLength/2;
 			maxx1 = poi1.screenPosition.x + poi1.labelLength/2;
 			miny1 = poi1.screenPosition.y - 10;
@@ -68,7 +68,7 @@ public class PoiClass{
 			return false;
 		}
 
-		if (type == selectedType || isSelected == 1) {//poi是需要大图标显示的poi
+		if (isSelected == 1) {//poi是需要大图标显示的poi
 			minx = screenPosition.x - labelLength/2;
 			maxx = screenPosition.x + labelLength/2;
 			miny = screenPosition.y - 10;

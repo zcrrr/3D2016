@@ -1,11 +1,11 @@
-#define STANDALONE
+//#define STANDALONE
 using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
 
 
 public class MapScan : MonoBehaviour {
-	public Font myfont;
+//	public Font myfont;
 	private float minPinchDistance = 10.0f;
 	private float angleRangeOfRotate = 100;
 	private float minAngle = 45f;
@@ -40,7 +40,7 @@ public class MapScan : MonoBehaviour {
 	Vector3 aroundPosition;
 	float step = 5;
 	KeyAndValue kav = new KeyAndValue ();
-	int selectedType = -1;
+	int selectedType = 0;
 	PoiClass lastSelectedPoi;
 	bool isDraging;
 	Texture2D texture_howToPlayBottom;
@@ -61,9 +61,10 @@ public class MapScan : MonoBehaviour {
 	float pcToPhoneScale = 2f;//放到手机运行之前，把这个值改成合适的倍数，使得手机上和电脑上显示的一样
 	float stepInt = 1f;
 	float stepIntSmall = 0.1f;
+	int[] arr = new int[]{0,1,2};
+	ArrayList showLabelPoiTypes = new ArrayList();
 
 	void setPcToPhoneScaleByPhoneType(){
-		
 		print ("screen.width is " + Screen.width);
 		//独立运行
 		//iphone6p : 1080
@@ -74,17 +75,20 @@ public class MapScan : MonoBehaviour {
 		if (Screen.width == 921) {
 			pcToPhoneScale = 2.3f;
 		} else if (Screen.width == 640) {
-			pcToPhoneScale = 1.7f;
+			pcToPhoneScale = 1.4f;
 		}
 	}
 	
 	// Use this for initialization
 	void Start () {
 		//test
-//		Main.initById (10);
-//		zywx_setPoiDateSource (Main.testdataAll);
+		Main.initById (119);
+		zywx_setPoiDateSource (Main.testdataAll);
 
-		LonLatPoint lonlatpoint = new LonLatPoint(116.272430f,39.991851f);
+		foreach (object obj in arr) {
+			showLabelPoiTypes.Add (obj);
+		}
+		LonLatPoint lonlatpoint = new LonLatPoint(116.351749f,39.930727f);
 		LonLatPoint lonlatMercator = gp.lonlatToMercator (lonlatpoint, 17);
 		print("---------------------lonlatMercator is "+(long)lonlatMercator.lon+"  "+(long)lonlatMercator.lat);	
 		setPcToPhoneScaleByPhoneType ();
@@ -541,13 +545,19 @@ public class MapScan : MonoBehaviour {
 	{
 		return x * 0.017453292519943295769f;
 	}
-
+	bool isPoiTypeHasLabel(int type){
+		return showLabelPoiTypes.Contains (type);
+	}
 	void OnGUI () { 
+		if(GUI.Button(new Rect(10,10,100,50),"test"))
+		{
+			selectedType = 1;
+		}
 		GUI.backgroundColor = Color.clear;
 		GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
 		centeredStyle.alignment = TextAnchor.UpperCenter;
 		centeredStyle.fontSize = 29;
-		centeredStyle.font = myfont;
+//		centeredStyle.font = myfont;
 		centeredStyle.normal.textColor = Color.black;
 
 		if (Main.imgString.Length > 0) {
@@ -580,6 +590,9 @@ public class MapScan : MonoBehaviour {
 			float lon = poi.lon;
 			float lat = poi.lat;
 			int type = poi.type;
+			if (type != selectedType){
+				continue;
+			}
 			int indexInDataSource = poi.ishot;
 			string name = poi.name;
 			int isSelected = poi.isSelected;
@@ -587,53 +600,53 @@ public class MapScan : MonoBehaviour {
 			PixelPoint point = gp.lonlatToPixel (lonlatpoint,17);
 			Vector3 screenpos = myCamera.WorldToScreenPoint(new Vector3 (-(float)point.pointX/100f,0f,(float)point.pointY/100f));
 			if(!isPositonInScreen(screenpos))continue;//不在屏幕内的不显示
-			if(type == 100){//玩法
-				if (GUI.Button (new Rect (screenpos.x - 31.5f, Screen.height - screenpos.y - 76f, 63f, 76f), texture_howToPlayBottom)) {
-					if(!isDraging){
-						selectOnePoi(poi);
-					}
-				}
-				if (GUI.Button (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y-10, poi.labelLength, label_high), "")) {
-					if(!isDraging){
-						selectOnePoi(poi);
-					}
-				}
-				centeredStyle.alignment = TextAnchor.UpperCenter;
-				centeredStyle.normal.textColor = new Color(1,1,1,1);
-				GUI.Label (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y-label_stroke_width-10, poi.labelLength, label_high), name,centeredStyle);
-				GUI.Label (new Rect (screenpos.x-poi.labelLength/2-label_stroke_width, Screen.height - screenpos.y-10, poi.labelLength, label_high), name,centeredStyle);
-				GUI.Label (new Rect (screenpos.x-poi.labelLength/2+label_stroke_width, Screen.height - screenpos.y-10, poi.labelLength, label_high), name,centeredStyle);
-				GUI.Label (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y+label_stroke_width-10, poi.labelLength, label_high), name,centeredStyle);
-				centeredStyle.normal.textColor = Color.black;
-				GUI.Label (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y-10, poi.labelLength, label_high), name,centeredStyle);
-				if(isSelected == 1){
-					if (GUI.Button (new Rect (screenpos.x - 130f, Screen.height - screenpos.y - 76f-152, 259, 152), texture_howToPlayTop)) {
-						if(!isDraging){
-							print ("indexInDataSource is "+indexInDataSource);
-#if STANDALONE
-							if (Main.platform.Equals ("ios")) {
-								_unityCallIOS("go there|"+indexInDataSource);
-							}else{
-								unityCallAndroid("unityCallAndroid","");
-							}
-#endif
-						}
-					}
-					centeredStyle.normal.textColor = Color.black;
-					centeredStyle.alignment = TextAnchor.MiddleCenter;
-					GUI.Label (new Rect (screenpos.x - 130f, Screen.height - screenpos.y - 76f-152, 259, 152), "到这去",centeredStyle);
-				}
-				continue;
-			}
-			float poiDistanceFromCamera = Vector3.Distance(new Vector3 (-(float)point.pointX/100f,0f,(float)point.pointY/100f),transform.position);
+//			if(type == 100){//玩法
+//				if (GUI.Button (new Rect (screenpos.x - 31.5f, Screen.height - screenpos.y - 76f, 63f, 76f), texture_howToPlayBottom)) {
+//					if(!isDraging){
+//						selectOnePoi(poi);
+//					}
+//				}
+//				if (GUI.Button (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y-10, poi.labelLength, label_high), "")) {
+//					if(!isDraging){
+//						selectOnePoi(poi);
+//					}
+//				}
+//				centeredStyle.alignment = TextAnchor.UpperCenter;
+//				centeredStyle.normal.textColor = new Color(1,1,1,1);
+//				GUI.Label (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y-label_stroke_width-10, poi.labelLength, label_high), name,centeredStyle);
+//				GUI.Label (new Rect (screenpos.x-poi.labelLength/2-label_stroke_width, Screen.height - screenpos.y-10, poi.labelLength, label_high), name,centeredStyle);
+//				GUI.Label (new Rect (screenpos.x-poi.labelLength/2+label_stroke_width, Screen.height - screenpos.y-10, poi.labelLength, label_high), name,centeredStyle);
+//				GUI.Label (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y+label_stroke_width-10, poi.labelLength, label_high), name,centeredStyle);
+//				centeredStyle.normal.textColor = Color.black;
+//				GUI.Label (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y-10, poi.labelLength, label_high), name,centeredStyle);
+//				if(isSelected == 1){
+//					if (GUI.Button (new Rect (screenpos.x - 130f, Screen.height - screenpos.y - 76f-152, 259, 152), texture_howToPlayTop)) {
+//						if(!isDraging){
+//							print ("indexInDataSource is "+indexInDataSource);
+//#if STANDALONE
+//							if (Main.platform.Equals ("ios")) {
+//								_unityCallIOS("go there|"+indexInDataSource);
+//							}else{
+//								unityCallAndroid("unityCallAndroid","");
+//							}
+//#endif
+//						}
+//					}
+//					centeredStyle.normal.textColor = Color.black;
+//					centeredStyle.alignment = TextAnchor.MiddleCenter;
+//					GUI.Label (new Rect (screenpos.x - 130f, Screen.height - screenpos.y - 76f-152, 259, 152), "到这去",centeredStyle);
+//				}
+//				continue;
+//			}
 
+			float poiDistanceFromCamera = Vector3.Distance(new Vector3 (-(float)point.pointX/100f,0f,(float)point.pointY/100f),transform.position);
 			if(kav.gdLevel2UnityCameraHeight(level) > poiDistanceFromCamera){
 				poi.screenPosition = new Vector2(screenpos.x,Screen.height - screenpos.y);
 				if(!calculateWhichPositionShouldPlace(poi)){
 					continue;
 				}
 				listPoisAlreadyInScreen.Add(poi);
-				if(type == selectedType || isSelected == 1){//big
+				if(isSelected == 1){//big
 					if (GUI.Button (new Rect (screenpos.x - 31.5f, Screen.height - screenpos.y - 76f, 63f, 76f), (GUIContent)texture_big[type])) {
 						if(!isDraging){
 #if STANDALONE
@@ -656,7 +669,7 @@ public class MapScan : MonoBehaviour {
 #endif
 						}
 					}
-					if (type == 0 || type == 1 || type == 2) {
+					if (isPoiTypeHasLabel(type)) {
 						centeredStyle.alignment = TextAnchor.UpperCenter;
 						centeredStyle.normal.textColor = new Color(1,1,1,1);
 						GUI.Label (new Rect (screenpos.x-poi.labelLength/2, Screen.height - screenpos.y-label_stroke_width-10, poi.labelLength, label_high), name,centeredStyle);
@@ -679,7 +692,7 @@ public class MapScan : MonoBehaviour {
 #endif
 						}
 					}
-					if(type == 0){
+					if(isPoiTypeHasLabel(type)){
 						float label_position_x = 0.0f;
 						float label_position_y = 0.0f;
 						switch(poi.textPosition){
@@ -772,8 +785,27 @@ public class MapScan : MonoBehaviour {
 			return true;
 		}
 		int i, j;
-		if (poi.type == selectedType) {//把所有该类型的poi都显示为大图标,有冲突的不予显示
-//			for (i = 0; i<listPoisAlreadyInScreen.Count; i++) {
+
+		if (isPoiTypeHasLabel(poi.type)) {//有label的图标
+			for (i = 1; i<=4; i++) {//4 position
+				poi.textPosition = i;
+				for (j = 0; j<listPoisAlreadyInScreen.Count; j++) {
+					PoiClass poiAlreadyInScreen = (PoiClass)listPoisAlreadyInScreen [j];
+					if (poi.hasConflict (poiAlreadyInScreen,selectedType)) {
+						break;
+					}
+				}
+				if (j == listPoisAlreadyInScreen.Count) {
+					return true;
+				}
+			}
+			return false;//放到4个方向哪个都有冲突，不放到屏幕上
+		} else {//没有label的图标
+			return true;
+		}
+
+//		if (poi.type == selectedType) {//把所有该类型的poi都显示为大图标,有冲突的不予显示
+//			for (i = 0; i<listPoisAlreadyInScreen.Count; i++) {d
 //				PoiClass poiAlreadyInScreen = (PoiClass)listPoisAlreadyInScreen [i];
 //				if (poi.hasConflict (poiAlreadyInScreen,selectedType)) {
 ////					print("has conflict2");
@@ -786,25 +818,9 @@ public class MapScan : MonoBehaviour {
 //				return true;
 //			}
 			return true;
-		} else {//小图标表示的poi
-			if (poi.type == 0) {//有label的图标
-				for (i = 1; i<=4; i++) {//4 position
-					poi.textPosition = i;
-					for (j = 0; j<listPoisAlreadyInScreen.Count; j++) {
-						PoiClass poiAlreadyInScreen = (PoiClass)listPoisAlreadyInScreen [j];
-						if (poi.hasConflict (poiAlreadyInScreen,selectedType)) {
-							break;
-						}
-					}
-					if (j == listPoisAlreadyInScreen.Count) {
-						return true;
-					}
-				}
-				return false;//放到4个方向哪个都有冲突，不放到屏幕上
-			} else {//没有label的图标
-				return true;
-			}
-		}
+//		} else {//小图标表示的poi
+			
+//		}
 	}
 	//------------------------------------------供自游无限使用的接口-----------------------------------------------------
 	//清除地图上的poi
@@ -946,7 +962,7 @@ public class MapScan : MonoBehaviour {
 		print ("cameraHigh is "+cameraHigh);
 		if (cameraHigh > Main.fitHigh)
 			cameraHigh = Main.fitHigh;
-		zywx_moveToLocation((minlon+maxlon)/2,(minlat+maxlat)/2,true,false,cameraHigh,10);
+		zywx_moveToLocation((minlon+maxlon)/2,(minlat+maxlat)/2,false,false,cameraHigh,10);
 		print ("unity:zywx_setCameraPositionByBounds:success" );
 	}
 	void zywx_locationChanged(string message){
@@ -969,11 +985,13 @@ public class MapScan : MonoBehaviour {
 	private static extern void _unityCallIOS (string message);
 	//unity调用android
 	void unityCallAndroid(string funcname,string message){
-		using (AndroidJavaClass cls_UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
-			using (AndroidJavaObject obj_Activity = cls_UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity")) {
-				obj_Activity.Call (funcname,message);
-			}
-		}
+//	#if UNITY_ANDROID
+//		using (AndroidJavaClass cls_UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
+//			using (AndroidJavaObject obj_Activity = cls_UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity")) {
+//				obj_Activity.Call (funcname,message);
+//			}
+//		}
+//	#endif
 	}
 	#endif
 }

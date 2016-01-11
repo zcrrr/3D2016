@@ -31,7 +31,7 @@ public class TextureUtil : MonoBehaviour {
 	float stepIntSmall = 0.1f;
 	// Use this for initialization
 	void Start () {
-		Main.initById (119);
+		Main.initById (13);
 		myCamera = GetComponent<Camera>();
 		string[] spots = Main.testdataPoi.Split (new char[] { ';' });
 		for (int i = 0; i < spots.Length; i++) {
