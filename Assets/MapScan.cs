@@ -82,8 +82,16 @@ public class MapScan : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//test
-		Main.initById (119);
+		Main.initById (43);
 		zywx_setPoiDateSource (Main.testdataAll);
+
+
+
+//		GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+//		plane.transform.position = new Vector3 (0,0.031f,0);
+//		Material yourMaterial = (Material)Resources.Load("moutain", typeof(Material));
+//		plane.GetComponent<Renderer> ().sharedMaterial = yourMaterial;
+//		Main.initById ();
 
 		foreach (object obj in arr) {
 			showLabelPoiTypes.Add (obj);
