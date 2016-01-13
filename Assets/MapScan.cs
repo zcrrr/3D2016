@@ -1,4 +1,4 @@
-#define STANDALONE
+//#define STANDALONE
 using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -82,8 +82,8 @@ public class MapScan : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//test
-//		Main.initById (43);
-//		zywx_setPoiDateSource (Main.testdataAll);
+		Main.initById (48);
+		zywx_setPoiDateSource (Main.testdataAll);
 
 
 

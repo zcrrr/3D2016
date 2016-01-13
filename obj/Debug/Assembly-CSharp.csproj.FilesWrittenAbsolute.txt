@@ -15,3 +15,4 @@
 /Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Unity.CecilTools.dll
 /Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Mono.Cecil.Pdb.dll
 /Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/zhangchi1/Desktop/unity_projects/LoadAB1201/Temp/bin/Debug/LitJson.dll
