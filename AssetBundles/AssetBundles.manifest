@@ -4,36 +4,3 @@ AssetBundleManifest:
     Info_0:
       Name: 1_ios.unity3d
       Dependencies: {}
-    Info_1:
-      Name: 3_ios.unity3d
-      Dependencies: {}
-    Info_2:
-      Name: 7_ios.unity3d
-      Dependencies: {}
-    Info_3:
-      Name: 8_ios.unity3d
-      Dependencies: {}
-    Info_4:
-      Name: 2_ios.unity3d
-      Dependencies: {}
-    Info_5:
-      Name: 4_ios.unity3d
-      Dependencies: {}
-    Info_6:
-      Name: 5_ios.unity3d
-      Dependencies: {}
-    Info_7:
-      Name: 6_ios.unity3d
-      Dependencies: {}
-    Info_8:
-      Name: 14_ios.unity3d
-      Dependencies: {}
-    Info_9:
-      Name: 20_ios.unity3d
-      Dependencies: {}
-    Info_10:
-      Name: 15_ios.unity3d
-      Dependencies: {}
-    Info_11:
-      Name: 0_ios.unity3d
-      Dependencies: {}
