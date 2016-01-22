@@ -2,5 +2,44 @@ ManifestFileVersion: 0
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: 1_ios.unity3d
+      Name: 46_ios.unity3d
+      Dependencies: {}
+    Info_1:
+      Name: 8_ios.unity3d
+      Dependencies: {}
+    Info_2:
+      Name: 119_android.unity3d
+      Dependencies: {}
+    Info_3:
+      Name: 43_android.unity3d
+      Dependencies: {}
+    Info_4:
+      Name: 48_android.unity3d
+      Dependencies: {}
+    Info_5:
+      Name: 28_android.unity3d
+      Dependencies: {}
+    Info_6:
+      Name: 49_android.unity3d
+      Dependencies: {}
+    Info_7:
+      Name: 45_android.unity3d
+      Dependencies: {}
+    Info_8:
+      Name: 5_android.unity3d
+      Dependencies: {}
+    Info_9:
+      Name: 6_android.unity3d
+      Dependencies: {}
+    Info_10:
+      Name: 10_android.unity3d
+      Dependencies: {}
+    Info_11:
+      Name: 19_android.unity3d
+      Dependencies: {}
+    Info_12:
+      Name: 37_android.unity3d
+      Dependencies: {}
+    Info_13:
+      Name: 24_android.unity3d
       Dependencies: {}

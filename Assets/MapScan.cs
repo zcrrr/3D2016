@@ -1,4 +1,4 @@
-//#define STANDALONE
+#define STANDALONE
 using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -18,9 +18,9 @@ public class MapScan : MonoBehaviour {
 	private bool isRotate = false;
 	Camera myCamera;
 	GoogleProjection gp = new GoogleProjection (); 
-	private float myLocationLon = 0.0f; 
-	private float myLocationLat = 0.0f;
-	private float heading = 0.0f;
+	private float myLocationLon = Main.myLocationLon; 
+	private float myLocationLat = Main.myLocationLat;
+	private float heading = Main.heading;
 	string currentGesture = "";//begin,zoom,rotate,updown
 	ArrayList gestureList = new ArrayList();  
 	Vector2 touchBefore;
@@ -46,7 +46,7 @@ public class MapScan : MonoBehaviour {
 	Texture2D texture_howToPlayBottom;
 	Texture2D texture_howToPlayTop;
 	public static float label_high = 36f;
-	public static float label_stroke_width = 3f;
+	public static float label_stroke_width = 1f;
 	//动态规避标注
 	ArrayList listPoisAlreadyInScreen = new ArrayList();
 	//道路分级显示
@@ -64,6 +64,10 @@ public class MapScan : MonoBehaviour {
 	int[] arr = new int[]{0,1,2};
 	ArrayList showLabelPoiTypes = new ArrayList();
 
+
+	bool canRotate = false;
+	bool canUpAndDown = false;
+
 	void setPcToPhoneScaleByPhoneType(){
 		print ("screen.width is " + Screen.width);
 		//独立运行
@@ -76,13 +80,15 @@ public class MapScan : MonoBehaviour {
 			pcToPhoneScale = 2.3f;
 		} else if (Screen.width == 640) {
 			pcToPhoneScale = 1.4f;
+		} else if (Screen.width == 1080) {
+			pcToPhoneScale = 2.5f;
 		}
 	}
 	
 	// Use this for initialization
 	void Start () {
 		//test
-		Main.initById (48);
+//		Main.initById (119);
 		zywx_setPoiDateSource (Main.testdataAll);
 
 
@@ -129,14 +135,6 @@ public class MapScan : MonoBehaviour {
 			texture_image.Add (image);
 		}
 		texture_myLoc = (Texture2D)Resources.Load ("mylocation");
-#if STANDALONE
-		if (Main.platform.Equals ("ios")) {
-			_unityCallIOS("initdata");
-		}else{
-			unityCallAndroid("unityCallAndroid","initdata");
-		}
-#endif
-
 	}
 
 
@@ -291,7 +289,9 @@ public class MapScan : MonoBehaviour {
 					Vector2 vectorAfter01 = new Vector2(touchOne.position.x-touchZero.position.x,touchOne.position.y-touchZero.position.y);
 					float rotateAngle = VectorAngle(vectorbefore01, vectorAfter01);
 					Vector3 centerPoint = new Vector3((touch0before.x+touch1before.x)/2,(touch0before.y+touch1before.y)/2,transform.position.y/Mathf.Sin(DegreetoRadians(transform.eulerAngles.x)));
-					transform.RotateAround (myCamera.ScreenToWorldPoint(centerPoint),new Vector3(0,1,0) , -rotateAngle);
+					if (canRotate) {
+						transform.RotateAround (myCamera.ScreenToWorldPoint(centerPoint),new Vector3(0,1,0) , -rotateAngle);
+					}
 					hasRotated = true;
 				}else{
 					if(isDistanceChangeHuge){
@@ -361,31 +361,33 @@ public class MapScan : MonoBehaviour {
 							}
 						}else{
 						}
-						float h2 = transform.position.y;
-						float angle1 = 90.0f-transform.eulerAngles.x;
-						if(deltaMagnitudeDiff > 0){//zoom out
-							if(transform.eulerAngles.x < getMaxAngleByHeight()){
-								Vector3 cameraLeftWorldVector = transform.TransformDirection (Vector3.left);
-								float anglecorret = getMaxAngleByHeight()-transform.eulerAngles.x;
-								transform.RotateAround (transform.position, cameraLeftWorldVector,-anglecorret);
-								float dis1 = Mathf.Tan(DegreetoRadians(angle1))*h2;
-								float dis2 = Mathf.Tan(DegreetoRadians(angle1-anglecorret))*h2;
-								float dis = dis1 - dis2;
-								float y_weight = dis*Mathf.Sin(DegreetoRadians(transform.eulerAngles.x));
-								float z_weight = dis*Mathf.Cos(DegreetoRadians(transform.eulerAngles.x));
-								transform.Translate (0, y_weight, z_weight );
-							}
-						}else{//zoom in
-							if(!hasUpDown){
-								Vector3 cameraLeftWorldVector = transform.TransformDirection (Vector3.left);
-								float anglecorret = transform.eulerAngles.x - getMaxAngleByHeight();
-								transform.RotateAround (transform.position, cameraLeftWorldVector,anglecorret);
-								float dis1 = Mathf.Tan(DegreetoRadians(angle1))*h2;
-								float dis2 = Mathf.Tan(DegreetoRadians(angle1+anglecorret))*h2;
-								float dis = dis2 - dis1;
-								float y_weight = dis*Mathf.Sin(DegreetoRadians(transform.eulerAngles.x));
-								float z_weight = dis*Mathf.Cos(DegreetoRadians(transform.eulerAngles.x));
-								transform.Translate (0, -y_weight, -z_weight );
+						if (canRotate&&canUpAndDown) {
+							float h2 = transform.position.y;
+							float angle1 = 90.0f-transform.eulerAngles.x;
+							if(deltaMagnitudeDiff > 0){//zoom out
+								if(transform.eulerAngles.x < getMaxAngleByHeight()){
+									Vector3 cameraLeftWorldVector = transform.TransformDirection (Vector3.left);
+									float anglecorret = getMaxAngleByHeight()-transform.eulerAngles.x;
+									transform.RotateAround (transform.position, cameraLeftWorldVector,-anglecorret);
+									float dis1 = Mathf.Tan(DegreetoRadians(angle1))*h2;
+									float dis2 = Mathf.Tan(DegreetoRadians(angle1-anglecorret))*h2;
+									float dis = dis1 - dis2;
+									float y_weight = dis*Mathf.Sin(DegreetoRadians(transform.eulerAngles.x));
+									float z_weight = dis*Mathf.Cos(DegreetoRadians(transform.eulerAngles.x));
+									transform.Translate (0, y_weight, z_weight );
+								}
+							}else{//zoom in
+								if(!hasUpDown){
+									Vector3 cameraLeftWorldVector = transform.TransformDirection (Vector3.left);
+									float anglecorret = transform.eulerAngles.x - getMaxAngleByHeight();
+									transform.RotateAround (transform.position, cameraLeftWorldVector,anglecorret);
+									float dis1 = Mathf.Tan(DegreetoRadians(angle1))*h2;
+									float dis2 = Mathf.Tan(DegreetoRadians(angle1+anglecorret))*h2;
+									float dis = dis2 - dis1;
+									float y_weight = dis*Mathf.Sin(DegreetoRadians(transform.eulerAngles.x));
+									float z_weight = dis*Mathf.Cos(DegreetoRadians(transform.eulerAngles.x));
+									transform.Translate (0, -y_weight, -z_weight );
+								}
 							}
 						}
 					}else{
@@ -426,7 +428,10 @@ public class MapScan : MonoBehaviour {
 						}
 						Vector3 cameraLeftWorldVector = transform.TransformDirection (Vector3.left);
 						Vector3 centerPoint = new Vector3(Screen.width/2,Screen.height/2,transform.position.y/Mathf.Sin(DegreetoRadians(transform.eulerAngles.x)));
-						transform.RotateAround (myCamera.ScreenToWorldPoint(centerPoint), cameraLeftWorldVector, angle);
+						if (canUpAndDown) {
+							transform.RotateAround (myCamera.ScreenToWorldPoint(centerPoint), cameraLeftWorldVector, angle);
+						}
+
 						hasUpDown = true;
 					}
 				}
@@ -557,10 +562,14 @@ public class MapScan : MonoBehaviour {
 		return showLabelPoiTypes.Contains (type);
 	}
 	void OnGUI () { 
+		#if UNITY_EDITOR
 		if(GUI.Button(new Rect(10,10,100,50),"test"))
 		{
 			selectedType = 1;
 		}
+		#endif
+		GUI.Label (new Rect (Screen.width - 400, 10, 400, 50), ""+myCamera.transform.position.x.ToString("f2")+"_"+myCamera.transform.position.y.ToString("f2")+"_"+myCamera.transform.position.z.ToString("f2"));
+		GUI.Label (new Rect (Screen.width - 400, 70, 400, 50), ""+myCamera.transform.eulerAngles.x.ToString("f2")+"_"+myCamera.transform.eulerAngles.y.ToString("f2")+"_"+myCamera.transform.eulerAngles.z.ToString("f2"));
 		GUI.backgroundColor = Color.clear;
 		GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
 		centeredStyle.alignment = TextAnchor.UpperCenter;
@@ -661,7 +670,7 @@ public class MapScan : MonoBehaviour {
 							if (Main.platform.Equals ("ios")) {
 								_unityCallIOS("clickpoi|"+name);
 							}else{
-								unityCallAndroid("unityCallAndroid",""+indexInDataSource);
+								unityCallAndroid("unityCallAndroid",""+name);
 							}
 #endif
 						}
@@ -672,7 +681,7 @@ public class MapScan : MonoBehaviour {
 							if (Main.platform.Equals ("ios")) {
 								_unityCallIOS("clickpoi|"+name);
 							}else{
-								unityCallAndroid("unityCallAndroid",""+indexInDataSource);
+								unityCallAndroid("unityCallAndroid",""+name);
 							}
 #endif
 						}
@@ -695,7 +704,7 @@ public class MapScan : MonoBehaviour {
 							if (Main.platform.Equals ("ios")) {
 								_unityCallIOS("clickpoi|"+name);
 							}else{
-								unityCallAndroid("unityCallAndroid",""+indexInDataSource);
+								unityCallAndroid("unityCallAndroid",""+name);
 							}
 #endif
 						}
@@ -738,7 +747,7 @@ public class MapScan : MonoBehaviour {
 								if (Main.platform.Equals ("ios")) {
 									_unityCallIOS("clickpoi|"+name);
 								}else{
-									unityCallAndroid("unityCallAndroid",""+indexInDataSource);
+									unityCallAndroid("unityCallAndroid",""+name);
 								}
 #endif
 							}
@@ -749,6 +758,7 @@ public class MapScan : MonoBehaviour {
 						GUI.Label (new Rect (label_position_x+label_stroke_width, label_position_y, poi.labelLength, label_high), name,centeredStyle);
 						GUI.Label (new Rect (label_position_x, label_position_y+label_stroke_width, poi.labelLength, label_high), name,centeredStyle);
 						centeredStyle.normal.textColor = Color.black;
+						centeredStyle.normal.textColor = new Color(55f/255f,55f/255f,55f/255f,1);
 						GUI.Label (new Rect (label_position_x, label_position_y, poi.labelLength, label_high), name,centeredStyle);
 					}
 				}
@@ -868,7 +878,6 @@ public class MapScan : MonoBehaviour {
 	}
 	//poi数据传递给unity:
 	void zywx_setPoiDateSource(string message){
-//		message = "109.153473,18.307053,登山之旅,100,0,0;109.153908,18.306824,下海之旅,100,0,0;109.154251,18.304733,情定小月湾,100,0,0";
 		print ("unity:zywx_setPoiDateSource:" + message);
 		removeAllPoi ();
 		string[] spots = message.Split (new char[] { ';' });
@@ -879,10 +888,10 @@ public class MapScan : MonoBehaviour {
 			string name = oneSpot[2];
 			float labelLength = name.Length * 30;
 			int type = int.Parse(oneSpot[3]);
-			int ishot = int.Parse(oneSpot[4]);
-			int level = int.Parse(oneSpot[5]);
-			PoiClass poi = new PoiClass(lon,lat,name,type,ishot,level,0,1,labelLength);
-			PoiClass poiDisplay = new PoiClass(lon,lat,name,type,i,level,0,1,labelLength);
+//			int ishot = int.Parse(oneSpot[4]);
+//			int level = int.Parse(oneSpot[5]);
+			PoiClass poi = new PoiClass(lon,lat,name,type,0,0,0,1,labelLength);
+			PoiClass poiDisplay = new PoiClass(lon,lat,name,type,i,0,0,1,labelLength);
 			list_datasource.Add(poi);
 			list_display.Add(poiDisplay);
 		}
@@ -986,6 +995,9 @@ public class MapScan : MonoBehaviour {
 		Main.pleaseLoadScenicId = int.Parse (message);
 		Application.LoadLevelAsync("LoadAB1202");
 	}
+	void zywx_backToMainScene(string message){
+		Application.LoadLevelAsync("LoadAB1202");
+	}
 	//------------------------------------------调用自游无限的接口-----------------------------------------------------
 	#if STANDALONE
 	//unity调用iOS
@@ -993,13 +1005,13 @@ public class MapScan : MonoBehaviour {
 	private static extern void _unityCallIOS (string message);
 	//unity调用android
 	void unityCallAndroid(string funcname,string message){
-//	#if UNITY_ANDROID
-//		using (AndroidJavaClass cls_UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
-//			using (AndroidJavaObject obj_Activity = cls_UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity")) {
-//				obj_Activity.Call (funcname,message);
-//			}
-//		}
-//	#endif
+	#if UNITY_ANDROID
+		using (AndroidJavaClass cls_UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
+			using (AndroidJavaObject obj_Activity = cls_UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity")) {
+				obj_Activity.Call (funcname,message);
+			}
+		}
+	#endif
 	}
 	#endif
 }

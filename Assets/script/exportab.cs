@@ -6,7 +6,7 @@ public class CreateAssetBundles
 	static void BuildAllAssetBundles ()
 	{	
 
-		BuildPipeline.BuildAssetBundles ("AssetBundles",BuildAssetBundleOptions.None,BuildTarget.iOS);
+		BuildPipeline.BuildAssetBundles ("AssetBundles/android",BuildAssetBundleOptions.None,BuildTarget.Android);
 //		BuildPipeline.BuildAssetBundles ("AssetBundles");
 
 	}
