@@ -37,6 +37,9 @@ public class Main: MonoBehaviour
 	public static float myLocationLon = 0.0f; 
 	public static float myLocationLat = 0.0f;
 	public static float heading = 0.0f;
+	public static string appear_camera = "0_10_0,90_180_0";
+	public string url_version = "1";
+	public string url_field = "";
 
 
 	
@@ -61,18 +64,17 @@ public class Main: MonoBehaviour
 		print ("after zywx_loadScene :"+message);
 		JsonData rootjson = JsonMapper.ToObject(message);
 		JsonData data;
-		print ("zc1");
 		if (platform.Equals ("ios")) {
 			data = rootjson ["data"];
 		} else {
 			data = rootjson;
 		}
-		print ("zc2");
 		scenicid = (String)data["scenic_id"];
-		print ("zc3");
-		fullURL = serverURL + scenicid +"_" + platform + ".unity3d";
+		url_field = (String)data["ab_URL"];//1_43
+		fullURL = serverURL + url_field +"_" + platform + ".unity3d";
 		print ("fullURL is "+fullURL);
 		print ("scenicid is "+scenicid);
+		url_version = (String)data["url_version"];
 		string offsize = (String)data["offsize"];
 		offsetX = long.Parse(offsize.Split (new char[] { '_' })[0]);
 		offsetY = long.Parse(offsize.Split (new char[] { '_' })[1]);
@@ -83,6 +85,8 @@ public class Main: MonoBehaviour
 		absize = (String)data["ab_size"];
 		imgString = (String)data["decorate_image"];
 		testdataAll = (String)data["poi"];
+		appear_camera = (String)data ["appear_camera"];
+		print ("appear_camera is "+appear_camera);
 		StartCoroutine(DownloadAssetAndScene());
 	}
 	void zywx_locationChanged(string message){
@@ -98,12 +102,12 @@ public class Main: MonoBehaviour
 		//下载场景，加载场景
 //		Caching.CleanCache();
 
-		using (scene = WWW.LoadFromCacheOrDownload (fullURL,1))
+		using (scene = WWW.LoadFromCacheOrDownload (fullURL,int.Parse(url_version)))
 		{
 			Debug.Log("end");
 			yield return scene;
 			AssetBundle bundle = scene.assetBundle;
-			Application.LoadLevelAsync(scenicid);
+			Application.LoadLevelAsync(url_field);
 		}
 	}
 	void Update()
@@ -116,8 +120,9 @@ public class Main: MonoBehaviour
 	void OnGUI(){
 		#if UNITY_EDITOR
 		if(GUI.Button(new Rect(0,0,200,50),"test")){
-			zywx_loadScene("43");
+			zywx_loadScene("");
 		}
+
 		#endif
 		GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
 		centeredStyle.fontSize = 30;
@@ -128,9 +133,11 @@ public class Main: MonoBehaviour
 			GUI.Label (new Rect (Screen.width/2-100, Screen.height/2-70, 200, 100),""+(int)(scene.progress*100)+"%",centeredStyle);
 			GUI.DrawTexture (new Rect (100, Screen.height / 2 - 5, Screen.width - 200, 10), whiteImg);
 			GUI.DrawTexture (new Rect (100, Screen.height / 2 - 5, (Screen.width - 200) * scene.progress, 10), yellowImg);
-			GUI.Label (new Rect (100, Screen.height/2 +20, Screen.width-200, 100),"正在下载地图数据，共"+absize+"，请稍后...",centeredStyle);
+			GUI.Label (new Rect (100, Screen.height/2 +20, Screen.width-200, 100),"正在下载地图数据，共"+absize+"，请稍候...",centeredStyle);
 		} else {
-			GUI.Label (new Rect (100, Screen.height/2-50, Screen.width - 200, 100),"正在加载地图数据，请稍后",centeredStyle);
+			if (platform.Equals ("ios")) {
+				GUI.Label (new Rect (100, Screen.height/2-50, Screen.width - 200, 100),"正在加载地图数据，请稍后...",centeredStyle);
+			}
 		}	
 	}
 

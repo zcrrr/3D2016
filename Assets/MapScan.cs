@@ -58,7 +58,8 @@ public class MapScan : MonoBehaviour {
 	GameObject road10;
 	GameObject road11;
 
-	float pcToPhoneScale = 2f;//放到手机运行之前，把这个值改成合适的倍数，使得手机上和电脑上显示的一样
+	float pcToPhoneScaleImage = 2f;//放到手机运行之前，把这个值改成合适的倍数，使得手机上和电脑上显示的一样
+	float pcToPhoneScaleText = 1f;
 	float stepInt = 1f;
 	float stepIntSmall = 0.1f;
 	int[] arr = new int[]{0,1,2};
@@ -67,6 +68,7 @@ public class MapScan : MonoBehaviour {
 
 	bool canRotate = false;
 	bool canUpAndDown = false;
+	string testLog = "testlog";
 
 	void setPcToPhoneScaleByPhoneType(){
 		print ("screen.width is " + Screen.width);
@@ -77,18 +79,18 @@ public class MapScan : MonoBehaviour {
 		//iphone6p : 921
 		//iphone5:640
 		if (Screen.width == 921) {
-			pcToPhoneScale = 2.3f;
+			pcToPhoneScaleImage = 2.3f;
 		} else if (Screen.width == 640) {
-			pcToPhoneScale = 1.4f;
+			pcToPhoneScaleImage = 1.4f;
 		} else if (Screen.width == 1080) {
-			pcToPhoneScale = 2.5f;
+			pcToPhoneScaleImage = 2.5f;
 		}
 	}
 	
 	// Use this for initialization
 	void Start () {
 		//test
-//		Main.initById (119);
+//		Main.initById (43);
 		zywx_setPoiDateSource (Main.testdataAll);
 
 
@@ -99,15 +101,34 @@ public class MapScan : MonoBehaviour {
 //		plane.GetComponent<Renderer> ().sharedMaterial = yourMaterial;
 //		Main.initById ();
 
+		string[] temp1 = Main.appear_camera.Split (new char[] { ',' });
+		string[] temp11 = temp1[0].Split(new char[] { '_' });
+		string[] temp12 = temp1[1].Split(new char[] { '_' });
+		float appear_position_x = float.Parse(temp11 [0]);
+		float appear_position_y = float.Parse(temp11 [1]);
+		float appear_position_z = float.Parse(temp11 [2]);
+
+		float appear_rotation_x = float.Parse(temp12 [0]);
+		float appear_rotation_y = float.Parse(temp12 [1]);
+		float appear_rotation_z = float.Parse(temp12 [2]);
+
+		transform.position = new Vector3 (appear_position_x,appear_position_y,appear_position_z);
+		transform.eulerAngles = new Vector3 (appear_rotation_x,appear_rotation_y,appear_rotation_z);
+
+//		print ("appear_position_x:"+appear_position_x+"  appear_position_y:"+appear_position_y+"  appear_position_z:"+appear_position_z);
+//		print ("appear_rotation_x:"+appear_rotation_x+"  appear_rotation_x:"+appear_rotation_y+"  appear_rotation_z:"+appear_rotation_z);
+
+			
+
 		foreach (object obj in arr) {
 			showLabelPoiTypes.Add (obj);
 		}
-		LonLatPoint lonlatpoint = new LonLatPoint(116.351749f,39.930727f);
+		LonLatPoint lonlatpoint = new LonLatPoint(116.351856f,39.930587f);
 		LonLatPoint lonlatMercator = gp.lonlatToMercator (lonlatpoint, 17);
 		print("---------------------lonlatMercator is "+(long)lonlatMercator.lon+"  "+(long)lonlatMercator.lat);	
 		setPcToPhoneScaleByPhoneType ();
 #if UNITY_EDITOR
-		pcToPhoneScale = 1;
+		pcToPhoneScaleImage = 1;
 #endif
 		road2 = GameObject.Find ("R2");
 		road3 = GameObject.Find ("R3");
@@ -224,6 +245,7 @@ public class MapScan : MonoBehaviour {
 				Vector2 touchDeltaPosition = touchAfter - touchBefore;
 				float lengthScreen = touchDeltaPosition.magnitude;
 				if (lengthScreen <= 0) {
+					isDraging = false;
 					return;
 				}
 				Vector3 touchAfterToWorld = myCamera.ScreenToWorldPoint(new Vector3(touchAfter.x,touchAfter.y,transform.position.y/Mathf.Sin(DegreetoRadians(transform.eulerAngles.x))));
@@ -565,11 +587,12 @@ public class MapScan : MonoBehaviour {
 		#if UNITY_EDITOR
 		if(GUI.Button(new Rect(10,10,100,50),"test"))
 		{
-			selectedType = 1;
+			zywx_listenOnePoi("109.501732|18.225855|观海亭");
 		}
 		#endif
-		GUI.Label (new Rect (Screen.width - 400, 10, 400, 50), ""+myCamera.transform.position.x.ToString("f2")+"_"+myCamera.transform.position.y.ToString("f2")+"_"+myCamera.transform.position.z.ToString("f2"));
-		GUI.Label (new Rect (Screen.width - 400, 70, 400, 50), ""+myCamera.transform.eulerAngles.x.ToString("f2")+"_"+myCamera.transform.eulerAngles.y.ToString("f2")+"_"+myCamera.transform.eulerAngles.z.ToString("f2"));
+//		GUI.Label (new Rect (Screen.width - 400, 10, 400, 50), ""+myCamera.transform.position.x.ToString("f2")+"_"+myCamera.transform.position.y.ToString("f2")+"_"+myCamera.transform.position.z.ToString("f2"));
+//		GUI.Label (new Rect (Screen.width - 400, 70, 400, 50), ""+myCamera.transform.eulerAngles.x.ToString("f2")+"_"+myCamera.transform.eulerAngles.y.ToString("f2")+"_"+myCamera.transform.eulerAngles.z.ToString("f2"));
+//		GUI.Label (new Rect (10, 10, Screen.width, 50),testLog);
 		GUI.backgroundColor = Color.clear;
 		GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
 		centeredStyle.alignment = TextAnchor.UpperCenter;
@@ -590,8 +613,8 @@ public class MapScan : MonoBehaviour {
 				float poiDistanceFromCamera = Vector3.Distance(new Vector3 (x,y,z),transform.position);
 				Texture2D texture = (Texture2D)texture_image[index];
 				
-				float width = texture.width/poiDistanceFromCamera*pcToPhoneScale*selfscale;
-				float height = texture.height/poiDistanceFromCamera*pcToPhoneScale*selfscale;
+				float width = texture.width/poiDistanceFromCamera*pcToPhoneScaleImage*selfscale;
+				float height = texture.height/poiDistanceFromCamera*pcToPhoneScaleImage*selfscale;
 				if (index == 52 || index == 53) {
 					GUI.DrawTexture (new Rect (screenpos.x - width / 2, Screen.height - screenpos.y - height/2, width, height), texture);
 				} else {
@@ -664,6 +687,7 @@ public class MapScan : MonoBehaviour {
 				}
 				listPoisAlreadyInScreen.Add(poi);
 				if(isSelected == 1){//big
+					
 					if (GUI.Button (new Rect (screenpos.x - 31.5f, Screen.height - screenpos.y - 76f, 63f, 76f), (GUIContent)texture_big[type])) {
 						if(!isDraging){
 #if STANDALONE
@@ -698,8 +722,8 @@ public class MapScan : MonoBehaviour {
 					}
 				}else{//small
 					if (GUI.Button (new Rect (screenpos.x - 22, Screen.height - screenpos.y - 22, 44, 44), (GUIContent)texture_small[type])) {
-						if(!isDraging){
-							selectOnePoi(poi);
+						if (!isDraging) {
+							selectOnePoi (poi);
 #if STANDALONE
 							if (Main.platform.Equals ("ios")) {
 								_unityCallIOS("clickpoi|"+name);
@@ -757,7 +781,6 @@ public class MapScan : MonoBehaviour {
 						GUI.Label (new Rect (label_position_x-label_stroke_width, label_position_y, poi.labelLength, label_high), name,centeredStyle);
 						GUI.Label (new Rect (label_position_x+label_stroke_width, label_position_y, poi.labelLength, label_high), name,centeredStyle);
 						GUI.Label (new Rect (label_position_x, label_position_y+label_stroke_width, poi.labelLength, label_high), name,centeredStyle);
-						centeredStyle.normal.textColor = Color.black;
 						centeredStyle.normal.textColor = new Color(55f/255f,55f/255f,55f/255f,1);
 						GUI.Label (new Rect (label_position_x, label_position_y, poi.labelLength, label_high), name,centeredStyle);
 					}
@@ -927,10 +950,26 @@ public class MapScan : MonoBehaviour {
 				list_temp.Add(poi);
 			}
 		}
+		if (list_display.Count == 0) {
+			_unityCallIOS("alert|未找到该类型数据!");
+		}
 		foreach (PoiClass poi in list_temp) {
 			list_display.Add (poi);
 		}
 		print ("unity:zywx_highlightDisplayPoiWithType:success" );
+	}
+	void zywx_listenOnePoi(string message){
+		print ("unity:zywx_listenOnePoi:" + message);
+		string []s = message.Split(new char[] { '|' });
+		//以该点为中心显示
+		zywx_moveToLocation(float.Parse(s[0]),float.Parse(s[1]),true,false,10,20);
+		foreach (PoiClass poi in list_display) {
+			if (poi.name.Equals (s[2])) {
+				selectOnePoi (poi);
+			}
+		}
+		print ("unity:zywx_listenOnePoi:success" );
+
 	}
 	void selectOnePoi(PoiClass poi){
 		poi.isSelected = 1;
