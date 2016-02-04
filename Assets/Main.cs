@@ -5,8 +5,8 @@ using LitJson;
 
 public class Main: MonoBehaviour
 {
-//	public static string platform = "ios";//ios or android
-	public static string platform = "android";//ios or android
+	public static string platform = "ios";//ios or android
+//	public static string platform = "android";//ios or android
 
 //	private string clientPath = "file:///Users/zhangchi1/Desktop/ab/cube1209.unity3d";
 //	private string serverURL = "http://182.92.97.144/3dgis/";

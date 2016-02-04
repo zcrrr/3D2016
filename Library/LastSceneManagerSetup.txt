@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/1_43.unity
+- path: Assets/LoadAB1202.unity
   isLoaded: 1
   isActive: 1
